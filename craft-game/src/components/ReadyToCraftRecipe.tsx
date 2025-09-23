@@ -1,5 +1,5 @@
 import type { RecipeItem } from "@typeData/types";
-import { Tile } from "@components/Tile";
+import Tile from "@components/Tile";
 
 type NewRecipeProps = {
   recipe: RecipeItem;

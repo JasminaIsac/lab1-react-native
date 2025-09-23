@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { recipeItems } from "@/data/recipeItems";
+import { recipeItems } from "@data/recipeItems";
 import { useDiscoveredRecipes } from "@contexts/discovered/useDiscoveredRecipes";
 import { useResetGame } from "@hooks/useResetGame";
 import { CloseIcon } from "@assets/CloseIcon";

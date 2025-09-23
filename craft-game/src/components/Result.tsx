@@ -1,6 +1,6 @@
 import { RecipeItem } from "@typeData/types";
 import { ArrowIcon } from "@assets/ArrowIcon";
-import {Tile} from "@components/Tile";
+import Tile from "@components/Tile";
 
 interface ResultProps {
   item: RecipeItem | null;

@@ -1,12 +1,12 @@
-import { Tile } from "./Tile";
 import type { RecipeItem } from "@typeData/types";
 import { recipeItemIcons } from "@assets/RecipeItemsIcons";
+import Tile from "./Tile";
 
 const DiscoveredRecipeCard = ({ item }: { item: RecipeItem }) => {
   return (
     <div className="flex flex-col bg-gray-200 dark:bg-teal-600 rounded-lg shadow-md p-4 transition-colors duration-300 mb-4">
       <div className="flex flex-row items-center mb-4">
-        <Tile item={item} size={16} onClick={undefined} />
+        <Tile item={item} size={16} onClick={undefined} details={false} />
         <div className="flex flex-col ml-4">
           <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
           <p className="text-sm">{item.description}</p>

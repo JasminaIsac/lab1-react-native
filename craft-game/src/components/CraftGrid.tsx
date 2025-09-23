@@ -1,82 +1,52 @@
-import { useContext } from "react";
 import type { RecipeItem } from "@typeData/types";
-import { DragContext } from "@contexts/dragdrop/DragContext";
+import type { HandleDropTypes } from "@typeData/handleDropTypes";
+import { useCraft } from "@contexts/craft/useCraft";
 import { useInventory } from "@contexts/inventory/UseInventory";
-import CraftSlot from "@components/CraftSlot";
+import { useDragDrop } from "@hooks/useDragDrop";
+import Tile from "@components/Tile";
 
-interface CraftGridProps {
-  cells: (RecipeItem | null)[];
-  setCells: React.Dispatch<React.SetStateAction<(RecipeItem | null)[]>>;
-}
+const CraftGrid = ({ cells }: { cells: (RecipeItem | null)[] }) => {
+  // const { draggedItem, endDrag } = useContext(DragContext);
+  const { removeItem:removeItemFromCraft, moveItemTo } = useCraft();
+  const { addItem:addItemToInventory, removeItem:removeItemFromInventory } = useInventory();
+  const { handleDrop, handleDragOver, handleDragStart } = useDragDrop();
 
-const CraftGrid = ({ cells, setCells }: CraftGridProps) => {
-  const { draggedItem, endDrag } = useContext(DragContext);
-  const { addItem: handleIngredientToInventory, removeItem: removeItemFromInventory } = useInventory();
+  const handleDropOnTile = (data: HandleDropTypes) => {
+    const { item, fromZone, fromIndex, toIndex } = data;
 
-  const handleDrop = (targetIndex: number) => {
-    if (!draggedItem) return;
+    if (fromZone === "inventory") {
+      const evictedItem = moveItemTo(null, toIndex, item);
+      if (fromIndex !== null) removeItemFromInventory(fromIndex);
 
-    setCells((prev) => {
-      const updated = [...prev];
-
-      switch (draggedItem.source) {
-        case "craft": {
-          if (draggedItem.sourceIndex !== undefined && draggedItem.sourceIndex !== targetIndex) {
-            const sourceItem = updated[draggedItem.sourceIndex];
-            const targetItem = updated[targetIndex];
-
-            updated[targetIndex] = sourceItem;
-            updated[draggedItem.sourceIndex] = targetItem;
-          }
-          break;
-        }
-
-        case "inventory": {
-          updated[targetIndex] = { ...draggedItem.item };
-          if (draggedItem.sourceIndex !== undefined) {
-            removeItemFromInventory(draggedItem.sourceIndex);
-          }
-          break;
-        }
-
-        case "resource": {
-          updated[targetIndex] = { ...draggedItem.item };
-          break;
-        }
+      if (evictedItem) {
+        addItemToInventory(evictedItem, fromIndex);
       }
-
-      return updated;
-    });
-
-    endDrag();
+    }
+    if (fromZone === "craft") {
+      moveItemTo(fromIndex, toIndex);
+    }
   };
 
-  const handleClickCell = (index: number) => {
-    const item = cells[index];
+  const handleClick = (item: RecipeItem | null, index: number) => {
     if (!item) return;
-
-    handleIngredientToInventory(item);
-    setCells((prev) => {
-      const newCells = [...prev];
-      newCells[index] = null;
-      return newCells;
-    });
+    const addedSuccessfully = addItemToInventory(item);
+    if (addedSuccessfully) removeItemFromCraft(index);
   };
-
-  if (cells[2] !== null) console.log("cells", cells);
 
   return (
     <div className="p-2">
       <h1 className="text-xl font-bold text-center mb-4">Craft Game</h1>
 
       <div className="grid grid-cols-3 gap-2 container-base">
-        {cells.map((cell, index) => (
-          <CraftSlot
+        {cells.map((item, index) => (
+          <Tile
             key={index}
-            item={cell}
-            index={index}
-            onClick={() => handleClickCell(index)}
-            handleDrop={handleDrop}
+            item={item ?? null}
+            size={20}
+            onClick={() => handleClick(item, index)}
+            onDrop={handleDrop(handleDropOnTile, "craft", index)}
+            onDragOver={handleDragOver}
+            onDragStart={item ? handleDragStart(item, "craft", index) : undefined}
           />
         ))}
       </div>

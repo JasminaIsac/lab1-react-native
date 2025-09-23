@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { RecipeItem } from "@typeData/types";
 import { CraftContext } from "@contexts/craft/CraftContext";
+import { swap } from "@utils/swap";
 
 interface Props {
   children: React.ReactNode;
@@ -30,15 +31,39 @@ export const CraftProvider = ({ children }: Props) => {
 
   const clearGrid = () => setCells(Array(gridSize).fill(null));
 
-  const addItem = (item: RecipeItem) => {
-    const firstEmptyIndex = cells.findIndex((c) => c === null);
-    if (firstEmptyIndex === -1) return false;
+  const addItem = (item: RecipeItem, index: number | null = null) => {
+    const targetIndex = index !== null ? index : cells.findIndex(i => i === null);
+    if (targetIndex === -1) return false;
 
-    const updated = [...cells];
-    updated[firstEmptyIndex] = item;
-    setCells(updated);
+    setCells(prev => {
+      const updated = [...prev];
+      updated[targetIndex] = item;
+      return updated;
+    });
+
     return true;
   };
+
+  // Mută un item între sloturi sau plasează un item din exterior
+  const moveItemTo = (fromIndex: number| null, toIndex: number | null, itemFromOutside: RecipeItem | null = null) => {
+    if (fromIndex === toIndex) return null;
+
+    let evictedItem: RecipeItem | null = null;
+
+    if (itemFromOutside) {
+      evictedItem = toIndex !== null ? cells[toIndex] : null;
+      const success = addItem(itemFromOutside, toIndex);
+      if (!success) return itemFromOutside;
+    } else {
+      if (fromIndex === null) return null;
+
+      evictedItem = toIndex !== null ? cells[toIndex] : null;
+      setCells(prev => swap(prev, fromIndex, toIndex));
+    }
+
+    return evictedItem;
+  };
+
 
   const removeItem = (index: number) => {
     if (index < 0 || index >= cells.length) return;
@@ -52,7 +77,7 @@ export const CraftProvider = ({ children }: Props) => {
   };
 
   return (
-    <CraftContext.Provider value={{ cells, setCells, addItem, clearGrid, removeItem, clearCraft }}>
+    <CraftContext.Provider value={{ cells, setCells, addItem, moveItemTo, clearGrid, removeItem, clearCraft }}>
       {children}
     </CraftContext.Provider>
   );

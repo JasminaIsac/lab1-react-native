@@ -8,15 +8,15 @@ import CraftGrid from "@components/CraftGrid";
 import Result from "@components/Result";
 
 const CraftArea = () => {    
-    const { cells, setCells, clearGrid } = useCraft();
-    const [result, setResult] = useState<RecipeItem | null>(null);
+    const { cells, clearGrid } = useCraft();
+    const [ result, setResult ] = useState<RecipeItem | null>(null);
     const { addItem: handleAddToInventory } = useInventory();
     const { addDiscovered } = useDiscoveredRecipes();
 
     const handleClick = ( item: RecipeItem ) => {
-        handleAddToInventory(item);
-        setResult(null);
-        clearGrid();
+      handleAddToInventory(item);
+      setResult(null);
+      clearGrid();
         addDiscovered(item);
     };
 
@@ -25,10 +25,10 @@ const CraftArea = () => {
     setResult(matched ?? null);
     }, [cells]);
 
-    return(
+    return (
         <div className="flex-1 flex gap-4 p-4 items-center justify-center">
-            <CraftGrid cells={cells} setCells={setCells} />
-            <Result item={result} onClick={handleClick}/>
+            <CraftGrid cells={cells} />
+            <Result item={result} onClick={handleClick} />
         </div>
     )
 }

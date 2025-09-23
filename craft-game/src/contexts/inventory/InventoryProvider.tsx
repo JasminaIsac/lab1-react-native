@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode } from "react";
 import type { RecipeItem } from "@typeData/types";
 import { InventoryContext } from "@contexts/inventory/InventoryContext";
+import { swap } from "@utils/swap";
 
 type Props = {
   children: ReactNode;
@@ -28,24 +29,57 @@ const InventoryProvider = ({ children }: Props) => {
   }, [inventory]);
 
 
-  const addItem = (item: RecipeItem, index?: number) => {
-    if (index !== undefined) {
-      if (index < 0 || index >= inventory.length || inventory[index] !== null) return false;
-      const updated = [...inventory];
-      updated[index] = item;
-      setInventory(updated);
-      return true;
-    }
-    const firstEmptyIndex = inventory.findIndex((i) => i === null);
-    if (firstEmptyIndex === -1) {
-      alert("Inventar plin!");
-      return false;
+  // const addItem = (item: RecipeItem, index?: number) => {
+  //   if (index !== undefined) {
+  //     if (index < 0 || index >= inventory.length || inventory[index] !== null) return false;
+  //     const updated = [...inventory];
+  //     updated[index] = item;
+  //     setInventory(updated);
+  //     return true;
+  //   }
+  //   const firstEmptyIndex = inventory.findIndex((i) => i === null);
+  //   if (firstEmptyIndex === -1) {
+  //     alert("Inventar plin!");
+  //     return false;
+  //   } else {
+  //     const updated = [...inventory];
+  //     updated[firstEmptyIndex] = item;
+  //     setInventory(updated);
+  //     return true;
+  //   }
+  // };
+
+  const addItem = (item: RecipeItem, index: number | null = null) => {
+    const targetIndex = index !== null ? index : inventory.findIndex(i => i === null);
+    if (targetIndex === -1) return false;
+
+    setInventory(prev => {
+      const updated = [...prev];
+      updated[targetIndex] = item;
+      return updated;
+    });
+
+    return true;
+  };
+
+  // Mută un item între sloturi sau plasează un item din exterior
+  const moveItemTo = (fromIndex: number| null, toIndex: number | null, itemFromOutside: RecipeItem | null = null) => {
+    if (fromIndex === toIndex) return null;
+
+    let evictedItem: RecipeItem | null = null;
+
+    if (itemFromOutside) {
+      evictedItem = toIndex !== null ? inventory[toIndex] : null;
+      const success = addItem(itemFromOutside, toIndex);
+      if (!success) return itemFromOutside;
     } else {
-      const updated = [...inventory];
-      updated[firstEmptyIndex] = item;
-      setInventory(updated);
-      return true;
+      if (fromIndex === null) return null;
+
+      evictedItem = toIndex !== null ? inventory[toIndex] : null;
+      setInventory(prev => swap(prev, fromIndex, toIndex));
     }
+
+    return evictedItem;
   };
 
   const removeItem = (index: number | null) => {
@@ -62,7 +96,7 @@ const InventoryProvider = ({ children }: Props) => {
   };
 
   return (
-    <InventoryContext.Provider value={{ inventory, setInventory, addItem, removeItem, clearInventory }}>
+    <InventoryContext.Provider value={{ inventory, setInventory, addItem, moveItemTo, removeItem, clearInventory }}>
       {children}
     </InventoryContext.Provider>
   );
