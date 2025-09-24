@@ -1,46 +1,42 @@
-# Crearea unui Joc de Crafting în React
+# Crafting Game in React
 ![alt text](image.png)
-## Cerințe Generale
-Selectați o tematică pentru obiecte și rețete.
-### Configurare Proiect
-- Creează un proiect `React` folosind `Vite`.
-- Folosește fișiere `.json` pentru a stoca rețetele de creare și resursele.
-### Stilizare & Interfață Utilizator (UI)
-- Stilizarea puteți so implementați fie prin `CSS Module`, fie prin orice librărie doriți.
-- Implementează sistem de [`drag-and-drop`](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API) pentru mutarea obiectelor între inventar și zona de crafting (nu se permite utilizarea librăriilor de drag și drop).
-## Funcționalități
-### 1. Sistemul de Inventar și Resurse
-Utilizatorul poate:
-- Accesa resurse de bază (generarea la infint a acestora).
-- Organiza obiectele în inventar.
-- Șterge obiecte.
-### 2. Sistemul de Crafting
-Fiecare rețetă are:
-- Un design cu ingrediente specifice.
-- Un rezultat cu nume, descriere și imagine asociată.
+## Overview
+This project is a crafting game built with React + TypeScript (using Vite). Players can collect resources, combine them to craft new items, and track their progress through a discovery system.
 
-Sistemul de crafting include:
-- Detectarea automată a rețetelor valide în timpul plasării obiectelor.
-- Afișarea vizuală a obiectului rezultat înainte de confirmare.      
-- Adăugarea automată a obiectelor noi în inventar după creare.     
-### 3. Panoul de Descoperire
-- Afișează următoarele obiecte care pot fi create cu resursele disponibile descoperite.
-### 4. Persistență și Progres
-- Salvarea progresului în localStorage (obiecte descoperite, inventar).
-- Sistem de victorie la crearea obiectului final.     
-- Posibilitatea de resetare completă a jocului.
+The theme of items and recipes is customizable and stored in JSON files, making the game easy to extend with new ingredients and crafting rules.
 
-## Barem de notare
-| Punctaj | Sarcina |
-|---------|--------------------------------------------------------------------------------------------------------------|
-| 0.5     | Crearea corectă a proiectului cu Vite și structura de fișiere|
-| 0.5     | Utilizarea fișierelor JSON pentru salvarea rețetelor și resurselor|
-| 0.5       | Afișarea panoului de câștig la crearea ultimului obiect|
-| 0.5       | Abilitatea de resetare a jocului  |              
-| 1       | Afișarea corectă a panoului de        descoperire|
-| 1       | Crearea și utilizarea corectă a state-ului, efectelor secundare și context-ului, cât și a custom hook-urilor|
-| 1       | Salvarea corectă a progresului între refresh-uri |
-| 2       | Implementarea completă a sistemului de crafting cu validarea rețetelor|
-| 2       | Implementarea sistemului drag-and-drop & inventar|
+## Project Setup & Architecture
+- Built with Vite for fast development and optimized builds.
+- Entirely written in TypeScript for better type safety and maintainability.
+- Resources and recipes are stored in dedicated .json files.
+- UI styling is implemented using CSS Modules (or any preferred styling solution).
+- Drag-and-drop is implemented manually using the native HTML Drag and Drop API.
 
-### Exemplu de rezolvarea a laboratorului este [aici](https://rn-lab1.vercel.app/).
+## Features
+### 1. Inventory & Resources
+- Players have access to infinite basic resources.
+- Items can be moved, organized, or deleted from the inventory.
+  
+### 2. Crafting System
+- Each recipe has a specific set of required ingredients and produces a unique result.
+- The system automatically detects valid recipes as items are placed on the crafting board.
+- Crafted items are previewed before confirmation and then automatically added to the inventory.
+
+### 3.Discovery Panel
+- Displays all items that the player has already discovered.
+- Shows the crafting model for each discovered item.
+  
+### 4. Possible Recipes Panel
+- Suggests items that can be crafted with currently available resources.
+- Provides hints about the necessary ingredients to encourage experimentation.
+
+### 5. Persistence & Progress
+- Player progress is saved in localStorage (inventory and discovered items).
+- Includes a reset option for restarting the game.
+- Features a victory condition when the final item is crafted.
+
+### 5. Theme Switching
+- The app supports both light and dark themes.
+
+## Demo
+You can try the game here: [Potion Craft Game](https://potion-craft-game.vercel.app/).
