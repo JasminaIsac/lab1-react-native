@@ -63,7 +63,7 @@ export const recipeItems: RecipeItem[] = [
     id: 8,
     type: 'crafted',
     name: "Combustive Mixture",
-    description: "A volatile brew of ash and moon tonic, brewed in the cauldron.",
+    description: "A volatile brew of ash and moonlight water, brewed in the cauldron.",
     ingredients: [5, 5, 5, 2, 2, 2, 4, null, null], // 3× Ashen Powder + 3× Water + Cauldron
     icon: recipeItemIcons[8],
   },
@@ -71,7 +71,7 @@ export const recipeItems: RecipeItem[] = [
     id: 9,
     type: 'crafted',
     name: "Healing Ointment",
-    description: "A soothing balm for wounds, drawn from extracts and tonics.",
+    description: "A soothing balm for wounds, drawn from herbal extracts and moon tonics.",
     ingredients: [null, 7, null, 6, null, 6, null, 7, null], // 2× Herbal Extract + 2× Moon Tonic
     icon: recipeItemIcons[9],
   },
